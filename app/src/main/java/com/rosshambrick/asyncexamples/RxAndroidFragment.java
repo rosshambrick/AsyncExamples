@@ -16,6 +16,8 @@ import rx.android.lifecycle.LifecycleEvent;
 import rx.android.lifecycle.LifecycleObservable;
 import rx.schedulers.Schedulers;
 
+import static rx.android.lifecycle.LifecycleEvent.*;
+
 public class RxAndroidFragment extends RxFragment implements Observer<String> {
     private static final String TAG = "AsyncTaskActivity";
 
@@ -27,13 +29,19 @@ public class RxAndroidFragment extends RxFragment implements Observer<String> {
         super.onCreate(savedInstanceState);
 
         setRetainInstance(true);
-        cache = bindLifecycle(getStringObservable()).cache();
+        cache = bindLifecycle(getStringObservable(), DESTROY).cache();
+    }
+
+    //TODO: PR this to RxAndroid Framework
+    private <T> Observable<T> bindLifecycle(Observable<T> observable, LifecycleEvent lifecycleEvent) {
+        Observable<T> boundObservable = AppObservable.bindFragment(this, observable);
+        return LifecycleObservable.bindUntilLifecycleEvent(lifecycle(), boundObservable, lifecycleEvent);
     }
 
     //TODO: PR this to RxAndroid Framework
     private <T> Observable<T> bindLifecycle(Observable<T> observable) {
         Observable<T> boundObservable = AppObservable.bindFragment(this, observable);
-        return LifecycleObservable.bindUntilLifecycleEvent(lifecycle(), boundObservable, LifecycleEvent.DESTROY);
+        return LifecycleObservable.bindFragmentLifecycle(lifecycle(), boundObservable);
     }
 
     @Override
@@ -50,7 +58,7 @@ public class RxAndroidFragment extends RxFragment implements Observer<String> {
                     @Override
                     public void onClick(View v) {
                         resultText.setText("Running...");
-                        cache = bindLifecycle(getStringObservable()).cache();
+                        cache = bindLifecycle(getStringObservable(), DESTROY).cache();
                         cache.subscribe(RxAndroidFragment.this);
                     }
                 });
