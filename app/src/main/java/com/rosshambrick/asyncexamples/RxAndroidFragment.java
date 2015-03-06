@@ -27,21 +27,7 @@ public class RxAndroidFragment extends RxFragment implements Observer<String> {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setRetainInstance(true);
-        cache = bindLifecycle(getStringObservable(), DESTROY).cache();
-    }
-
-    //TODO: PR this to RxAndroid Framework
-    private <T> Observable<T> bindLifecycle(Observable<T> observable, LifecycleEvent lifecycleEvent) {
-        Observable<T> boundObservable = AppObservable.bindFragment(this, observable);
-        return LifecycleObservable.bindUntilLifecycleEvent(lifecycle(), boundObservable, lifecycleEvent);
-    }
-
-    //TODO: PR this to RxAndroid Framework
-    private <T> Observable<T> bindLifecycle(Observable<T> observable) {
-        Observable<T> boundObservable = AppObservable.bindFragment(this, observable);
-        return LifecycleObservable.bindFragmentLifecycle(lifecycle(), boundObservable);
     }
 
     @Override
@@ -64,8 +50,10 @@ public class RxAndroidFragment extends RxFragment implements Observer<String> {
                 });
 
         if (savedInstanceState != null) {
-            resultText.setText("Running...");
-            cache.subscribe(this);
+            if (cache != null) {
+                resultText.setText("Running...");
+                cache.subscribe(this);
+            }
         }
     }
 
@@ -98,4 +86,17 @@ public class RxAndroidFragment extends RxFragment implements Observer<String> {
             }
         }).subscribeOn(Schedulers.io());
     }
+
+    //TODO: PR this to RxAndroid Framework
+    private <T> Observable<T> bindLifecycle(Observable<T> observable, LifecycleEvent lifecycleEvent) {
+        Observable<T> boundObservable = AppObservable.bindFragment(this, observable);
+        return LifecycleObservable.bindUntilLifecycleEvent(lifecycle(), boundObservable, lifecycleEvent);
+    }
+
+    //TODO: PR this to RxAndroid Framework
+    private <T> Observable<T> bindLifecycle(Observable<T> observable) {
+        Observable<T> boundObservable = AppObservable.bindFragment(this, observable);
+        return LifecycleObservable.bindFragmentLifecycle(lifecycle(), boundObservable);
+    }
+
 }

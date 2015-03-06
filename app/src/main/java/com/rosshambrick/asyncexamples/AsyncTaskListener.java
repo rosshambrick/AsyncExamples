@@ -5,7 +5,5 @@ public interface AsyncTaskListener<TResult> {
 
     void onSuccess(TResult result);
 
-    void onPreExecute();
-
     void onFinally();
 }

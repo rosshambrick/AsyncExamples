@@ -22,6 +22,7 @@ public class AsyncTaskActivity extends TracingActivity implements AsyncTaskListe
                 .setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        resultText.setText("Running...");
                         task = new ActivityAsyncTask();
                         task.setListener(AsyncTaskActivity.this);
                         task.execute();
@@ -32,6 +33,7 @@ public class AsyncTaskActivity extends TracingActivity implements AsyncTaskListe
             //restores instance for caching on rotation
             task = (ActivityAsyncTask) getLastCustomNonConfigurationInstance();
             if (task != null) {
+                resultText.setText("Running...");
                 task.setListener(this); //replay previous results and register for remaining results
             }
         }
@@ -61,26 +63,14 @@ public class AsyncTaskActivity extends TracingActivity implements AsyncTaskListe
     }
 
     @Override
-    public void onPreExecute() {
-        resultText.setText("Running...");
-    }
-
-    @Override
     public void onFinally() {
         task = null; //prevents task from being leaked
     }
 
-    private class ActivityAsyncTask extends TracingAsyncTask<Void, Void, String> {
+    private static class ActivityAsyncTask extends TracingAsyncTask<Void, Void, String> {
         private Exception e;
         private AsyncTaskListener<String> listener;
         private String result;
-
-        @Override
-        protected void onPreExecute() {
-            if (listener != null) {
-                listener.onPreExecute();
-            }
-        }
 
         @Override
         protected String doInBackground(Void... params) {
@@ -107,7 +97,6 @@ public class AsyncTaskActivity extends TracingActivity implements AsyncTaskListe
                 }
                 listener.onFinally();
             }
-            task = null; //prevents task from being leaked
         }
 
         public void setListener(AsyncTaskListener<String> listener) {
