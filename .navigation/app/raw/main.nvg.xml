@@ -6,10 +6,18 @@
     <statePointEntry>
       <state      
         class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
-        className = "com.rosshambrick.asyncexamples.AsyncTaskActivity"/>
+        className = "com.rosshambrick.asyncexamples.HostActivity"/>
       <point      
         x = "500"      
-        y = "1480"/>
+        y = "100"/>
+    </statePointEntry>
+    <statePointEntry>
+      <state      
+        class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
+        className = "com.rosshambrick.asyncexamples.MenuActivity"/>
+      <point      
+        x = "500"      
+        y = "100"/>
     </statePointEntry>
     <statePointEntry>
       <state      
@@ -22,10 +30,10 @@
     <statePointEntry>
       <state      
         class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
-        className = "com.rosshambrick.asyncexamples.MenuActivity"/>
+        className = "com.rosshambrick.asyncexamples.AsyncTaskActivity"/>
       <point      
         x = "500"      
-        y = "100"/>
+        y = "1480"/>
     </statePointEntry>
   </locations>
 </navigationModel>

@@ -17,7 +17,15 @@ public class MenuActivity extends ActionBarActivity {
                 .setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        startActivity(new Intent(MenuActivity.this, NonCancellingAsyncTaskActivity.class));
+                        startActivity(new Intent(MenuActivity.this, AsyncTaskActivity.class));
+                    }
+                });
+
+        findViewById(R.id.fragment_async_task)
+                .setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        startActivity(new Intent(MenuActivity.this, HostActivity.class));
                     }
                 });
     }

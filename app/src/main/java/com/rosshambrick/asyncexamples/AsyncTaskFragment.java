@@ -1,36 +1,46 @@
 package com.rosshambrick.asyncexamples;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
-
-public class NonCancellingAsyncTaskActivity extends TracingActivity implements AsyncTaskListener<String> {
+public class AsyncTaskFragment extends Fragment implements AsyncTaskListener<String> {
     private static final String TAG = "AsyncTaskActivity";
 
     private TextView resultText;
     private ActivityAsyncTask task;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_async_task);
+        setRetainInstance(true);
+    }
 
-        resultText = (TextView) findViewById(R.id.activity_async_task_result_text);
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.async_task_runner, container, false);
+    }
 
-        findViewById(R.id.activity_async_task_button)
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+
+        resultText = (TextView) view.findViewById(R.id.activity_async_task_result_text);
+
+        view.findViewById(R.id.activity_async_task_button)
                 .setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         task = new ActivityAsyncTask();
-                        task.setListener(NonCancellingAsyncTaskActivity.this);
+                        task.setListener(AsyncTaskFragment.this);
                         task.execute();
                     }
                 });
 
         if (savedInstanceState != null) {
-            //restores instance for caching on rotation
-            task = (ActivityAsyncTask) getLastCustomNonConfigurationInstance();
             if (task != null) {
                 task.setListener(this); //replay previous results and register for remaining results
             }
@@ -38,13 +48,10 @@ public class NonCancellingAsyncTaskActivity extends TracingActivity implements A
     }
 
     @Override
-    public Object onRetainCustomNonConfigurationInstance() {
-        return task; //saves instance for caching on rotation
-    }
-
-    @Override
-    protected void onDestroy() {
-        task.setListener(null); //prevent leaking this Activity
+    public void onDestroy() {
+        if (task != null) {
+            task.setListener(null); //prevent leaking this Fragment
+        }
         super.onDestroy();
     }
 
