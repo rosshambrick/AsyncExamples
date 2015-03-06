@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">AsyncExamples</string>
+    <string name="title_activity_menu">MenuActivity</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_async_task">AsyncTaskActivity</string>
+</resources>
