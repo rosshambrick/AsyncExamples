@@ -26,4 +26,10 @@
         android:layout_height="wrap_content"
         android:text="Fragment Async Task" />
 
+    <Button
+        android:id="@+id/fragment_rxandroid"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Fragment RxAndroid" />
+
 </LinearLayout>
